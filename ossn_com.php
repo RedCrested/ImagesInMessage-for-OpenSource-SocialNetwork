@@ -28,8 +28,8 @@ function ImagesInMessage_page($pages) {
                 if (preg_match("/image/i", $_FILES['uploadImageInMessage']['type'])) {
                     $file = $_FILES['uploadImageInMessage']['tmp_name'];
                     $unique = time() . '-' . substr(md5(time()), 0, 6) . '.jpg';
-                    $newfile = ossn_get_userdata("tmp/photos/{$unique}");
-                    $dir = ossn_get_userdata("tmp/photos/");
+                    $newfile = ossn_get_userdata("messages/photos/{$unique}"); // issue #1
+                    $dir = ossn_get_userdata("messages/photos/");
                     if (!is_dir($dir)) {
                         mkdir($dir, 0755, true);
                     } 
@@ -54,9 +54,9 @@ function ImagesInMessage_page($pages) {
                 header('content-type: image/jpeg');
                 $file = rtrim(ossn_validate_filepath($file), '/');
 
-                $tmpphotos = ossn_get_userdata("tmp/photos/");
-                $filename = str_replace($tmpphotos, '', $file);
-                $file = $tmpphotos . $filename;
+                $messagesPhotos = ossn_get_userdata("messages/photos/"); // issue #1
+                $filename = str_replace($messagesPhotos, '', $file);
+                $file = $messagesPhotos . $filename;
                 //avoid slashes in the file. 
                 if (strpos($filename, '\\') !== FALSE || strpos($filename, '/') !== FALSE) {
                     redirect();
@@ -99,7 +99,7 @@ function images_in_message_init() {
         ossn_extend_view('css/ossn.default', 'css/imagesinmessage');
     
         //js
-        ossn_extend_view('js/ossn.site', 'js/imagesinmessage');
+        ossn_extend_view('ossn/site/head', 'js/imagesinmessage');
         
         //page
         ossn_register_page('imagesinmessage', 'ImagesInMessage_page');

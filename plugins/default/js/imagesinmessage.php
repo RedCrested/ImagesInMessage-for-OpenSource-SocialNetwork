@@ -12,14 +12,12 @@
 $timestamp = time();
 $token = ossn_generate_action_token($timestamp);
 
-//maybe someone can improve these 2 lines...
-$chatName = strpos($_SERVER['HTTP_REFERER'], 'messages/message') === false ? '' : str_replace(ossn_site_url(),'',str_replace('messages/message/','',$_SERVER['HTTP_REFERER']));
-$guidByChatName = ossn_user_by_username($chatName);
-
 ?>
-//<script>
-    Ossn.RegisterStartupFunction(function () {
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
+        var $to = $("input[name=to]").val();
+        console.log("to:"+$to);
+        //Ossn.RegisterStartupFunction(function () {
             if ($('.message-form-form').length) {
                 var $inputCamera =
                         '<div class="image-message-add-photo" onclick="document.getElementById(\'uploadImageInMessage\').click();">' +
@@ -34,11 +32,10 @@ $guidByChatName = ossn_user_by_username($chatName);
                         '</div>';
                 $($inputCamera).prependTo('.message-form-form .controls');
                 $('<div class="image-data"></div><input type="hidden" name="image-attachment"/>').insertAfter('.ossn-message-pling');
-                $('#message-append-<?php echo $guidByChatName->guid; ?>').animate({ scrollTop: $('#message-append-<?php echo $guidByChatName->guid; ?>')[0].scrollHeight+500}, 1000);
+                $('#message-append-'+$to).animate({ scrollTop: $('#message-append-'+$to)[0].scrollHeight+500}, 1000);
                 Ossn.SentImageInMessage();
-
             }
-        });
+        //});
     });
 
     Ossn.SentImageInMessage = function () {
@@ -77,3 +74,4 @@ $guidByChatName = ossn_user_by_username($chatName);
             });
         });
     };
+</script>
