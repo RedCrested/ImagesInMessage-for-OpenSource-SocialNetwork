@@ -41,7 +41,7 @@ $params['count'] = $OssnMessages->recentChat(ossn_loggedin_user()->guid, true);
                     $user = ossn_user_by_guid($message->message_from);
                     $text = ossn_call_hook('messages', 'message:smilify', $args, strl($message->message, 32));
                     if (strpos($text, '[image=') !== false) { 
-                        $text = ossn_print('imagesinmessage:image:received');
+                        $text = ossn_print('imagesinmessage:image:sent');
                     }
                     $replied = ossn_print('ossnmessages:replied:you', array($text));
                     if (isset($message->is_deleted) && $message->is_deleted == true) {
@@ -51,6 +51,9 @@ $params['count'] = $OssnMessages->recentChat(ossn_loggedin_user()->guid, true);
                 } else {
                     $user = ossn_user_by_guid($message->message_from);
                     $text = ossn_call_hook('messages', 'message:smilify', $args, strl($message->message, 32));
+                    if (strpos($text, '[image=') !== false) { 
+                        $text = ossn_print('imagesinmessage:image:received');
+                    }
                     if (isset($message->is_deleted) && $message->is_deleted == true) {
                         $text = ossn_print('ossnmessages:deleted');
                     }

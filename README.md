@@ -15,6 +15,7 @@ Screenshot of OssnChat component
 - Version 1.1
     - Fix cache issue #2. Tested in both scenarios (cache on and off)
     - Fixed issue #1, after suggestion of @lianglee. However images sent using version 1.0 of component wont appear anymore. It's necessarily an issue to fix?
+    - Fixed issue #3 (Notification shows [image=ME95bis5L0pxaC9ncUozVGo1M... instead a friendly message) 
 - Version 1.0
     - First release, with few tests. Use in production by your own risk.
 

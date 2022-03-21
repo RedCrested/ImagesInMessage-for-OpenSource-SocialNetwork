@@ -11,7 +11,7 @@
 
  
 $ko = array(
-	'imagesinmessage:image:sent' => 'You uploaded an image',
+	'imagesinmessage:image:sent' => 'You sent an image',
 	'imagesinmessage:image:received' => 'You received an image',
 );
 ossn_register_languages('ko', $ko);

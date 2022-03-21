@@ -93,7 +93,6 @@ function imagesinmessage_messages_print($hook, $type, $return, $params) {
  */
 function images_in_message_init() {
 
-    
     if (ossn_isLoggedin()) {
         //css
         ossn_extend_view('css/ossn.default', 'css/imagesinmessage');
