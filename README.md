@@ -1,7 +1,7 @@
 # OSSN-ImagesInMessage
-An improvement on OssnMessages component to allow the user to attach images. Images also appear properly into OssnChat component, but isn't allowed (yet) to send images through this component.
+An improvement on OssnMessages component to allow the user to attach images. Images also appear properly into OssnChat component, but isn't possible (yet) to send images through this component.
 
-If FancyBox component is enabled, images can be open in fullscreen mode.
+If [FancyBox component](https://www.opensource-socialnetwork.org/component/view/369/fancybox) is enabled, images can be open in fullscreen mode.
 
 ## Screenshots
 Screenshot of OssnMessages component

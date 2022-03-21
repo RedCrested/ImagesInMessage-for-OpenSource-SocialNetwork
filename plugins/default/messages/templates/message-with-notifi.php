@@ -40,7 +40,7 @@ $params['count'] = $OssnMessages->recentChat(ossn_loggedin_user()->guid, true);
                 if ($message->answered && $message->message_from == $loggedin_guid || $yes_replied) {
                     $user = ossn_user_by_guid($message->message_from);
                     $text = ossn_call_hook('messages', 'message:smilify', $args, strl($message->message, 32));
-                    if (strpos($text, '[image=') !== false) {  //03/03/2022
+                    if (strpos($text, '[image=') !== false) { 
                         $text = ossn_print('imagesinmessage:image:received');
                     }
                     $replied = ossn_print('ossnmessages:replied:you', array($text));

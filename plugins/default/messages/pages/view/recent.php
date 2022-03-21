@@ -23,7 +23,7 @@
                 if ($message->answered && $message->message_from == $loggedin_guid || $yes_replied) {
                     $user = ossn_user_by_guid($message->message_from);
                     $text = ossn_call_hook('messages', 'message:smilify', $args, strl($message->message, 32));
-                    if (strpos($text, '[image=') !== false) {  //24/02/2022
+                    if (strpos($text, '[image=') !== false) { 
                         $text = ossn_print('imagesinmessage:image:received');
                     }
                     $replied = ossn_print('ossnmessages:replied:you', array($text));
@@ -34,7 +34,7 @@
                 } else {
                     $user = ossn_user_by_guid($message->message_from);
                     $text = ossn_call_hook('messages', 'message:smilify', $args, strl($message->message, 32));
-                    if (strpos($text, '[image=') !== false) { // 24/02/2022
+                    if (strpos($text, '[image=') !== false) { 
                         $text = ossn_print('imagesinmessage:image:sent');
                     }
                     if (isset($message->is_deleted) && $message->is_deleted == true) {
