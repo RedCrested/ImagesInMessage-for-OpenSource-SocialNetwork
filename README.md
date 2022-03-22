@@ -12,6 +12,10 @@ Screenshot of OssnChat component
 
 ## Changes
 
+- Version 1.2
+    - Fixed issue #5, found by Michael Zülsdorff 
+    - Fixed issue #6, found by Michael Zülsdorff 
+    - Add translation in Spanish. Thanks, (Hugo Cuellar)[https://github.com/Erassus]
 - Version 1.1
     - Fix cache issue #2. Tested in both scenarios (cache on and off). 
     - Fixed issue #1, after suggestion of @lianglee. However images sent using version 1.0 of component wont appear anymore. It's necessarily an issue to fix?
