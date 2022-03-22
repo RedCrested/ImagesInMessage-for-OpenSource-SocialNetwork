@@ -12,40 +12,46 @@
 /* Define Paths */
 define('__IMAGES_IN_MESSAGE__', ossn_route()->com . 'ImagesInMessage/');
 
-/* Load Class */
-require_once(__IMAGES_IN_MESSAGE__ . 'classes/ImagesInMessage.php');
+//Load Class 
+if (com_is_active('OssnMessages')){  //Error when disable OssnMessage component bug - #5
+    require_once(__IMAGES_IN_MESSAGE__ . 'classes/ImagesInMessage.php');
+} 
 
 function ImagesInMessage_page($pages) {
     $page = $pages[0];
     switch ($page) {
         case 'attachment':
-            header('Content-Type: application/json');
-            if (isset($_FILES['uploadImageInMessage']['tmp_name']) && ($_FILES['uploadImageInMessage']['error'] == UPLOAD_ERR_OK && $_FILES['file']['size'] !== 0) && ossn_isLoggedin()) {
-                //code of comment picture preview ignores EXIF header #1056
-                $OssnFile = new OssnFile;
-                $OssnFile->resetRotation($_FILES['uploadImageInMessage']['tmp_name']);
+            if (isset($_FILES['uploadImageInMessage'])){  // Warning when selecting an image #6
+                header('Content-Type: application/json');
+                if (isset($_FILES['uploadImageInMessage']['tmp_name']) && ($_FILES['uploadImageInMessage']['error'] == UPLOAD_ERR_OK && $_FILES['file']['size'] !== 0) && ossn_isLoggedin()) {
+                    //code of comment picture preview ignores EXIF header #1056
+                    $OssnFile = new OssnFile;
+                    $OssnFile->resetRotation($_FILES['uploadImageInMessage']['tmp_name']);
 
-                if (preg_match("/image/i", $_FILES['uploadImageInMessage']['type'])) {
-                    $file = $_FILES['uploadImageInMessage']['tmp_name'];
-                    $unique = time() . '-' . substr(md5(time()), 0, 6) . '.jpg';
-                    $newfile = ossn_get_userdata("messages/photos/{$unique}"); // issue #1
-                    $dir = ossn_get_userdata("messages/photos/");
-                    if (!is_dir($dir)) {
-                        mkdir($dir, 0755, true);
-                    } 
-                    if (move_uploaded_file($file, $newfile)) {
-                        $file = base64_encode(ossn_string_encrypt($newfile));
-                        echo json_encode(array(
-                            'file' => base64_encode($file),
-                            'type' => 1
-                        ));
-                        exit;
-                    } 
+                    if (preg_match("/image/i", $_FILES['uploadImageInMessage']['type'])) {
+                        $file = $_FILES['uploadImageInMessage']['tmp_name'];
+                        $unique = time() . '-' . substr(md5(time()), 0, 6) . '.jpg';
+                        $newfile = ossn_get_userdata("messages/photos/{$unique}"); // issue #1
+                        $dir = ossn_get_userdata("messages/photos/");
+                        if (!is_dir($dir)) {
+                            mkdir($dir, 0755, true);
+                        } 
+                        if (move_uploaded_file($file, $newfile)) {
+                            $file = base64_encode(ossn_string_encrypt($newfile));
+                            echo json_encode(array(
+                                'file' => base64_encode($file),
+                                'type' => 1
+                            ));
+                            exit;
+                        } 
+                    }
                 }
+                echo json_encode(array(
+                    'type' => 0
+                ));
+            } else {
+                error_log('Input uploadImageInMessage is not set');
             }
-            echo json_encode(array(
-                'type' => 0
-            ));
             break;
         case 'staticimage':
             $image = base64_decode(input('image'));
@@ -93,7 +99,8 @@ function imagesinmessage_messages_print($hook, $type, $return, $params) {
  */
 function images_in_message_init() {
 
-    if (ossn_isLoggedin()) {
+    //Error when disable OssnMessage component bug - #5
+    if (com_is_active('OssnMessages') && ossn_isLoggedin()) {
         //css
         ossn_extend_view('css/ossn.default', 'css/imagesinmessage');
     
@@ -108,7 +115,7 @@ function images_in_message_init() {
         ossn_register_action('message/send', __IMAGES_IN_MESSAGE__ . 'actions/message/send.php');
     }
     // transform [image= tag in <img src=
-    ossn_add_hook('message', 'print', 'imagesinmessage_messages_print');
+     ossn_add_hook('message', 'print', 'imagesinmessage_messages_print');
 }
 
 ossn_register_callback('ossn', 'init', 'images_in_message_init', 300);
