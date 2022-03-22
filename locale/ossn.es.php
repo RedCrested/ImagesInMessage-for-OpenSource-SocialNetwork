@@ -10,7 +10,7 @@
  */
  
 $es = array(
-	'imagesinmessage:image:sent' => 'You sent an image',
-	'imagesinmessage:image:received' => 'You received an image',
+	'imagesinmessage:image:sent' => 'Enviaste una imagen.',
+	'imagesinmessage:image:received' => 'Recibiste una imagen.',
 );
 ossn_register_languages('es', $es);
