@@ -23,7 +23,7 @@ function ImagesInMessage_page($pages) {
         case 'attachment':
             if (isset($_FILES['uploadImageInMessage'])){  // Warning when selecting an image #6
                 header('Content-Type: application/json');
-                if (isset($_FILES['uploadImageInMessage']['tmp_name']) && ($_FILES['uploadImageInMessage']['error'] == UPLOAD_ERR_OK && $_FILES['file']['size'] !== 0) && ossn_isLoggedin()) {
+                if (isset($_FILES['uploadImageInMessage']['tmp_name']) && ($_FILES['uploadImageInMessage']['error'] == UPLOAD_ERR_OK && $_FILES['uploadImageInMessage']['size'] !== 0) && ossn_isLoggedin()) {
                     //code of comment picture preview ignores EXIF header #1056
                     $OssnFile = new OssnFile;
                     $OssnFile->resetRotation($_FILES['uploadImageInMessage']['tmp_name']);
