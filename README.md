@@ -12,6 +12,9 @@ Screenshot of OssnChat component
 
 ## Changes
 
+- Version 1.2.1
+    - Add credits to Open Social Website Core Team and OpenTeknik LLC for code used
+    - Improved friendly name of component. "Allow to send images in OssnMessages" doesn't sound good to me :-)
 - Version 1.2
     - Fixed issue #5, found by Michael Zülsdorff 
     - Fixed issue #6, found by Michael Zülsdorff 

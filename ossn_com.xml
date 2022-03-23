@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component xmlns="http://www.opensource-socialnetwork.org/v/3.0">
-    <name>Allow to send images in OssnMessages</name>
+    <name>Send images in OssnMessages</name>
     <id>ImagesInMessage</id>
     <author>Rafael Amorim</author>
     <description>An improvement on OssnMessages component to allow user to attach images</description>
     <license>OSSN v4.0</license>
     <author_url>https://www.rafaelamorim.com.br/</author_url>
     <license_url>http://www.opensource-socialnetwork.org/licence/</license_url>
-    <version>1.2</version>
+    <version>1.2.1</version>
 	<requires>
 		<type>ossn_version</type>
 		<version>6.1</version>

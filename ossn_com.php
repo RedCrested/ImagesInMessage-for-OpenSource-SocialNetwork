@@ -7,6 +7,11 @@
  * @copyright (C) Rafael Amorim
  * @license   OSSNv4  http://www.opensource-socialnetwork.org/licence/
  * @link      https://www.rafaelamorim.com.br/
+ * 
+ * Parts of code in this component are from OssnComments, created by 
+ * @author    Open Social Website Core Team <info@openteknik.com>
+ * @copyright (C) OpenTeknik LLC
+ * 
  */
 
 /* Define Paths */
