@@ -25,7 +25,7 @@ $token = ossn_generate_action_token($timestamp);
                         '        <fieldset>' +
                         '            <input type="hidden" name="ossn_ts" value="<?php echo $timestamp; ?>">' +
                         '            <input type="hidden" name="ossn_token" value="<?php echo $token; ?>">' +
-                        '            <input type="file" id="uploadImageInMessage" name="uploadImageInMessage" class="overflow-hidden" style="display: contents; position: relative; top: -1000px;">' +
+                        '            <input type="file" id="uploadImageInMessage" name="uploadImageInMessage" class="overflow-hidden" accept="image/*" style="display: contents; position: relative; top: -1000px;">' +
                         '        </fieldset>' +
                         '        <i class="fa fa-camera"></i>' +
                         '    </form>' +
