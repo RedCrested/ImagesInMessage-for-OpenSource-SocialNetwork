@@ -13,35 +13,16 @@ $timestamp = time();
 $token = ossn_generate_action_token($timestamp);
 
 ?>
-<script>
-    $(document).ready(function () {
-        var $to = $("input[name=to]").val();
-        console.log("to:"+$to);
-        //Ossn.RegisterStartupFunction(function () {
-            if ($('.message-form-form').length) {
-                var $inputCamera =
-                        '<div class="image-message-add-photo" onclick="document.getElementById(\'uploadImageInMessage\').click();">' +
-                        '    <form id="message-image" class="ossn-form" method="post" enctype="multipart/form-data">' +
-                        '        <fieldset>' +
-                        '            <input type="hidden" name="ossn_ts" value="<?php echo $timestamp; ?>">' +
-                        '            <input type="hidden" name="ossn_token" value="<?php echo $token; ?>">' +
-                        '            <input type="file" id="uploadImageInMessage" name="uploadImageInMessage" class="overflow-hidden" accept="image/*" style="display: contents; position: relative; top: -1000px;">' +
-                        '        </fieldset>' +
-                        '        <i class="fa fa-camera"></i>' +
-                        '    </form>' +
-                        '</div>';
-                $($inputCamera).prependTo('.message-form-form .controls');
-                $('<div class="image-data"></div><input type="hidden" name="image-attachment"/>').insertAfter('.ossn-message-pling');
-                $('#message-append-'+$to).animate({ scrollTop: $('#message-append-'+$to)[0].scrollHeight+500}, 1000);
-                Ossn.SentImageInMessage();
-            }
-        //});
-    });
-
+//<script>
+    
     Ossn.SentImageInMessage = function () {
         $(document).ready(function () {
             $("#uploadImageInMessage").on('change', function (event) {
                 event.preventDefault();
+                if ($('input[name="image-attachment"]').val().length > 0 ){
+                    Ossn.DeleteImage();
+                }
+
                 var formData = new FormData($('#message-image')[0]);
                 $.ajax({
                     url: Ossn.site_url + 'imagesinmessage/attachment',
@@ -49,6 +30,7 @@ $token = ossn_generate_action_token($timestamp);
                     data: formData,
                     async: true,
                     beforeSend: function () {
+                        Ossn.DisableSendButton();
                         $('.controls').find('.image-data')
                                 .html('<img src="' + Ossn.site_url + 'components/ImagesInMessage/images/loading.gif" style="width:30px;border:none;height: initial;" />');
                     },
@@ -57,21 +39,94 @@ $token = ossn_generate_action_token($timestamp);
                     processData: false,
                     success: function (callback) {
                         if (callback['type'] == 1) {
-                            $('.controls').each(function () {
+
+                            //this will work only for Chrome
+                            $(window).on('beforeunload', function ()
+                            {
+                                Ossn.DeleteImage(false);
+                            });
+
+                            //this will work for other browsers
+                            /*$(window).on("unload", function ()
+                            {
+                                Ossn.DeleteImage(false);
+                            });*/
+
+                            $('.controls').
+                            each(function () {
                                 $(this).find('input[name="image-attachment"]').val(callback['file']);
-                                $(this).find('.image-data')
-                                        .html('<img src="' + Ossn.site_url + 'imagesinmessage/staticimage?image=' + callback['file'] + '" />');
+                                
+                                $(this)
+                                .find('.image-data')
+                                .html('<div class="row">' + 
+                                        '    <div class="col-2">&nbsp;</div>' +
+                                        '    <div class="col-8">' + 
+                                        '        <img src="' + Ossn.site_url + 'imagesinmessage/staticimage?image=' + callback['file'] + '" />'+
+                                        '    </div>' +
+                                        '    <div class="col-2">' +
+                                        '        <i class="fa fa-trash-alt" onclick="Ossn.DeleteImage();"></i>' +
+                                        '    </div>' +
+                                        '</div>');
                             });
                         }
-                        if (callback['type'] == 0) {
+                        if (callback['type'] == 0) { 
                             $('.controls').each(function () {
-                                $(this).find('input[name="image-attachment"]').val('');
+                                Ossn.CleanFileBox();
                             });
-                            Ossn.MessageBox('syserror/unknown');
+                            $(window).unbind('beforeunload');
+                            $(window).unbind('unload');
                         }
+                    },
+                    error: function (callbackError) {
+                        Ossn.CleanFileBox();
+                        $(window).unbind('beforeunload');
+                        $(window).unbind('unload');
+                        Ossn.MessageBox('syserror/unknown');
+                    },
+                    complete: function () {
+                        Ossn.EnableSendButton();
                     },
                 });
             });
         });
     };
-</script>
+
+    Ossn.DeleteImage = function (asyncOption = true) {
+        $(document).ready(function () {
+            $.ajax({
+                url: Ossn.site_url + 'imagesinmessage/removeFile?image=' + $('input[name="image-attachment"]').val(),
+                type: 'POST',
+                async: asyncOption,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (callback) {
+                    Ossn.CleanFileBox();
+                    $(window).unbind('beforeunload');
+                    $(window).unbind('unload');
+                },
+                error: function (callbackError) {
+                    $(this).find('input[name="image-attachment"]').val(''); 
+                    $(this).find('.image-data').html(''); 
+                    $(window).unbind('beforeunload');
+                    $(window).unbind('unload');
+                    Ossn.MessageBox('syserror/unknown');
+                },
+            });
+        });
+    };
+
+    Ossn.CleanFileBox = function(){
+        $('.controls').find('input[name="image-attachment"]').val(''); 
+        $('.controls').find('.image-data').html(''); 
+    };
+
+    Ossn.DisableSendButton = function (){
+        $('.controls .btn.btn-primary').prop('disabled',true);
+    }
+    
+    Ossn.EnableSendButton = function (){
+        $('.controls .btn.btn-primary').prop('disabled',false);
+    }
+
+//</script>

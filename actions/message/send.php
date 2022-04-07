@@ -45,6 +45,7 @@ if ($message_id = $send->send(ossn_loggedin_user()->guid, $to, $message)) {
 }
 echo "<script>$('#message-send-".$to."').find('.image-data').html('');</script>";
 echo "<script>$('#message-send-".$to."').find('[name=image-attachment]').val('');</script>";
+echo "<script>$(window).unbind('beforeunload');</script>";
 //force scrolldown again
 echo "<script>$('#message-append-".$to."').animate({ scrollTop: $('#message-append-".$to."')[0].scrollHeight+500}, 1000);</script>";
 

@@ -36,8 +36,8 @@ function ImagesInMessage_page($pages) {
                     if (preg_match("/image/i", $_FILES['uploadImageInMessage']['type'])) {
                         $file = $_FILES['uploadImageInMessage']['tmp_name'];
                         $unique = time() . '-' . substr(md5(time()), 0, 6) . '.jpg';
-                        $newfile = ossn_get_userdata("messages/photos/{$unique}"); // issue #1
-                        $dir = ossn_get_userdata("messages/photos/");
+                        $newfile = ossn_get_userdata("messages/photos/".ossn_loggedin_user()->guid."/{$unique}");  // issue #1
+                        $dir = ossn_get_userdata("messages/photos/".ossn_loggedin_user()->guid);
                         if (!is_dir($dir)) {
                             mkdir($dir, 0755, true);
                         } 
@@ -65,44 +65,91 @@ function ImagesInMessage_page($pages) {
                 header('content-type: image/jpeg');
                 $file = rtrim(ossn_validate_filepath($file), '/');
 
-                $messagesPhotos = ossn_get_userdata("messages/photos/"); // issue #1
-                $filename = str_replace($messagesPhotos, '', $file);
-                $file = $messagesPhotos . $filename;
-                //avoid slashes in the file. 
-                if (strpos($filename, '\\') !== FALSE || strpos($filename, '/') !== FALSE) {
-                    redirect();
+                if (is_file($file)) {
+                    echo file_get_contents($file);
                 } else {
-                    if (is_file($file)) {
-                        echo file_get_contents($file);
-                    } else {
-                        redirect();
-                    }
+                    redirect();
                 }
+                
             } else {
                 ossn_error_page();
             }
             break;
+        case 'removeFile':
+            $image = input('image');
+            
+            if (ImagesInMessage_DeleteFile($image)){
+                echo json_encode(array(
+                    'type' => 1
+                ));
+                exit;
+            } else{ 
+                echo json_encode(array(
+                    'type' => 0
+                ));
+                exit;
+            }
+            break;
         default:
             break;
+        }
     }
-}
-
-function imagesinmessage_messages_print($hook, $type, $return, $params) {
     
+    
+
+    function ImagesInMessage_messages_print($hook, $type, $return, $params) {
     if (strpos($return, '[image=') !== false) {  
         $text = substr($return,0, strpos($return,'[image='));
-        $image = substr($return,strpos($return,'[image='),strpos($return,']',strpos($return,'[image=')));
-        $image = str_replace('[image=','',$image);
-        $image = str_replace(']','',$image);
+        $image = ImagesInMessage_GetFileName($return);
         $return = $text . "<img src=\"". ossn_site_url('imagesinmessage/staticimage?image='.$image)."\" data-fancybox>";
     }
     return $return;
 }
 
+function ImagesInMessage_GetFileName($message){
+    $fileName = substr($message,strpos($message,'[image='),strpos($message,']',strpos($message,'[image=')));
+    $fileName = str_replace('[image=','',$fileName);
+    $fileName = str_replace(']','',$fileName);
+    return $fileName;
+}
+
+function ImagesInMessage_DeleteFile($filename){
+    $file = base64_decode($filename);
+    $file = ossn_string_decrypt(base64_decode($file));
+    if (unlink($file)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Delete images sent for user in messages/photos folder
+ *
+ * @param string $callback Name of callback
+ * @param string $type Callback type
+ * @param array $params Arrays or Objects
+ *
+ * @return void
+ * @access private
+ */
+function ImageInMessage_UserDelete($callback, $type, $params) {
+/*    ==> PAREI AQUI <==
+    VERIFICAR SE ID ESTÁ DEFINIDO
+    VERIFICAR SE A PASTA EXISTE
+    EXCLUIR TODA A PASTA COM ID DO USUÁRIO*/
+  /*
+     TRECHO COPIADO DO OSSNMESSAGES  
+    $messages = new OssnMessages;
+    if (isset($params['entity']->guid)) {
+        $messages->deleteUser($params['entity']->guid);
+    }*/
+}
+
 /**
  * Initialize the component.
  */
-function images_in_message_init() {
+function ImagesInMessage_init() {
 
     //Error when disable OssnMessage component bug - #5
     if (com_is_active('OssnMessages') && ossn_isLoggedin()) {
@@ -110,17 +157,23 @@ function images_in_message_init() {
         ossn_extend_view('css/ossn.default', 'css/imagesinmessage');
     
         //js
-        ossn_extend_view('ossn/site/head', 'js/imagesinmessage');
+        ossn_extend_view('ossn/site/head', 'js/imagesinmessage_head');
+        ossn_extend_view('js/ossn.site', 'js/imagesinmessage');
         
         //page
         ossn_register_page('imagesinmessage', 'ImagesInMessage_page');
 
+        //callbacks
+        ossn_register_callback('user', 'delete', 'ImageInMessage_UserDelete');
+
         //action
         ossn_unregister_action('message/send');
+        ossn_unregister_action('message/delete');
         ossn_register_action('message/send', __IMAGES_IN_MESSAGE__ . 'actions/message/send.php');
+        ossn_register_action('message/delete', __IMAGES_IN_MESSAGE__ . 'actions/message/delete.php');
     }
     // transform [image= tag in <img src=
-     ossn_add_hook('message', 'print', 'imagesinmessage_messages_print');
+     ossn_add_hook('message', 'print', 'ImagesInMessage_messages_print');
 }
 
-ossn_register_callback('ossn', 'init', 'images_in_message_init', 300);
+ossn_register_callback('ossn', 'init', 'ImagesInMessage_init', 300);
