@@ -9,8 +9,9 @@
  * @link      https://www.rafaelamorim.com.br/
  */
 
-class ImagesInMessage extends OssnMessages {
-    
+class ImagesInMessage extends OssnMessages
+{
+
     /**
      * Send message
      *
@@ -20,8 +21,9 @@ class ImagesInMessage extends OssnMessages {
      *
      * @return boolean
      */
-    public function send($from, $to, $message) {
-        
+    public function send($from, $to, $message)
+    {
+
         if (!strlen($message) || empty($from) || empty($to)) {
             return false;
         }
@@ -36,14 +38,14 @@ class ImagesInMessage extends OssnMessages {
             'message_to',
             'message',
             'time',
-            'viewed'
+            'viewed',
         );
         $params['values'] = array(
             (int) $from,
             (int) $to,
             $message,
             time(),
-            '0'
+            '0',
         );
         if ($this->insert($params)) {
             $this->lastMessage = $this->getLastEntry();
@@ -65,7 +67,29 @@ class ImagesInMessage extends OssnMessages {
         }
         return false;
     }
-    
-}
 
-?>
+    /**
+     * Delete folder and all files inside
+     *
+     * Source: https://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it
+     */
+    public static function deleteDir($dirPath)
+    {
+        if (!is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                self::deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
+    }
+
+}

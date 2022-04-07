@@ -134,17 +134,24 @@ function ImagesInMessage_DeleteFile($filename){
  * @access private
  */
 function ImageInMessage_UserDelete($callback, $type, $params) {
-/*    ==> PAREI AQUI <==
+
+    /*    ==> PAREI AQUI <==
     VERIFICAR SE ID ESTÁ DEFINIDO
     VERIFICAR SE A PASTA EXISTE
-    EXCLUIR TODA A PASTA COM ID DO USUÁRIO*/
-  /*
-     TRECHO COPIADO DO OSSNMESSAGES  
-    $messages = new OssnMessages;
+    EXCLUIR TODA A PASTA COM ID DO USUÁRIO
+    */
+  
+    //TRECHO COPIADO DO OSSNMESSAGES  
+    //$messages = new OssnMessages;
+    $imagesInMessage = new ImagesInMessage();
     if (isset($params['entity']->guid)) {
-        $messages->deleteUser($params['entity']->guid);
-    }*/
+        $dir = ossn_get_userdata("messages/photos/".$params['entity']->guid);
+        if (file_exists($dir)){
+            $imagesInMessage->deleteDir($dir);
+        }
+    }
 }
+
 
 /**
  * Initialize the component.
