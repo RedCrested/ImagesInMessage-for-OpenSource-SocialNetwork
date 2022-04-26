@@ -47,10 +47,10 @@ $token = ossn_generate_action_token($timestamp);
                             });
 
                             //this will work for other browsers
-                            /*$(window).on("unload", function ()
+                            $(window).on("unload", function ()
                             {
                                 Ossn.DeleteImage(false);
-                            });*/
+                            });
 
                             $('.controls').
                             each(function () {

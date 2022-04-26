@@ -14,11 +14,13 @@ Screenshot of OssnChat component
 
 - Version 2.0
     - Added code to delete file when user delete message. Files from deleted messages will keep into server. Sorry :-P
-    - Added code to delete file if user leave or reload page. Working in Chrome, Firefox, Edge...
-    - Added button to delete an image before send. If user select another image, the old is deleted too
+    - Added code to delete file if user leave or reload page. Working in Chrome, Firefox, Edge.
+    - Added button to delete an image before send. If user select another image, the old is deleted too.
     - JS file splited in two, to not inflate head section.
     - Before upload is complete, send button is disabled
     - Added TESTS.md, with test sequence used on this version
+    - Images now are stored in OSSN_DATA/messages/photos/{user id} folder. Sorry for don't do this in previous versions ( Issue #1 )
+    - When user is deleted, folder and files are removed too.
 - Version 1.2.1
     - Add credits to Open Social Website Core Team and OpenTeknik LLC for code used
     - Improved friendly name of component. "Allow to send images in OssnMessages" doesn't sound good to me :-)
