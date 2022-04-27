@@ -134,15 +134,7 @@ function ImagesInMessage_DeleteFile($filename){
  * @access private
  */
 function ImageInMessage_UserDelete($callback, $type, $params) {
-
-    /*    ==> PAREI AQUI <==
-    VERIFICAR SE ID ESTÁ DEFINIDO
-    VERIFICAR SE A PASTA EXISTE
-    EXCLUIR TODA A PASTA COM ID DO USUÁRIO
-    */
-  
-    //TRECHO COPIADO DO OSSNMESSAGES  
-    //$messages = new OssnMessages;
+    
     $imagesInMessage = new ImagesInMessage();
     if (isset($params['entity']->guid)) {
         $dir = ossn_get_userdata("messages/photos/".$params['entity']->guid);
@@ -158,6 +150,10 @@ function ImageInMessage_UserDelete($callback, $type, $params) {
  */
 function ImagesInMessage_init() {
 
+    //js to fix #9
+    ossn_new_external_js('imagesinmessage.imagesloaded.pkgd.min.js', ossn_add_cache_to_url('components/ImagesInMessage/vendors/imagesloaded.pkgd.min.js'));
+    ossn_load_external_js('imagesinmessage.imagesloaded.pkgd.min.js');
+
     //Error when disable OssnMessage component bug - #5
     if (com_is_active('OssnMessages') && ossn_isLoggedin()) {
         //css
@@ -166,6 +162,7 @@ function ImagesInMessage_init() {
         //js
         ossn_extend_view('ossn/site/head', 'js/imagesinmessage_head');
         ossn_extend_view('js/ossn.site', 'js/imagesinmessage');
+        
         
         //page
         ossn_register_page('imagesinmessage', 'ImagesInMessage_page');

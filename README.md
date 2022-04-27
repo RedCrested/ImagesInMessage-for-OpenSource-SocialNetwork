@@ -13,6 +13,7 @@ Screenshot of OssnChat component
 ## Changes
 
 - Version 2.0
+    - Added desandro/imagesloaded JS file and other stuffs to fix #9
     - Added code to delete file when user delete message. Files from deleted messages will keep into server. Sorry :-P
     - Added code to delete file if user leave or reload page. Working in Chrome, Firefox, Edge.
     - Added button to delete an image before send. If user select another image, the old is deleted too.

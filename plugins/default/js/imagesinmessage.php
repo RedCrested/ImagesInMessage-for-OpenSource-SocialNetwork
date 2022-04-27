@@ -128,5 +128,3 @@ $token = ossn_generate_action_token($timestamp);
     Ossn.EnableSendButton = function (){
         $('.controls .btn.btn-primary').prop('disabled',false);
     }
-
-//</script>
