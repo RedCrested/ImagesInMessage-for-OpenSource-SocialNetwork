@@ -32,11 +32,11 @@ $token = ossn_generate_action_token($timestamp);
             $('<div class="image-data"></div><input type="hidden" name="image-attachment"/>').insertAfter('.ossn-message-pling');
             $('#message-append-'+$to).animate({ scrollTop: $('#message-append-'+$to)[0].scrollHeight+1000}, 1000);
             Ossn.SentImageInMessage();
-        }
-
-        // issue #9
-        $('#message-append-'+$to).imagesLoaded( function() {
-            $('#message-append-'+$to).animate({ scrollTop: $('#message-append-'+$to)[0].scrollHeight+1000}, 1000);
-        });
+            
+            // issue #9
+            $('#message-append-'+$to).imagesLoaded( function() {
+                $('#message-append-'+$to).animate({ scrollTop: $('#message-append-'+$to)[0].scrollHeight+1000}, 1000);
+            });
+        } // Solving issue #10.  Previously, this if ends after Ossn.SentImageInMessage command
     });
 </script>
