@@ -12,6 +12,8 @@ Screenshot of OssnChat component
 
 ## Changes
 
+- Version 2.1
+    - Fixed issue #10, found by Michael Zülsdorff
 - Version 2.0
     - Added desandro/imagesloaded JS file and other stuffs to fix #9
     - Added code to delete file when user delete message. Files from deleted messages will keep into server. Sorry :-P
